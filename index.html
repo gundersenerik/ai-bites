@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Bites - Subscription Snacks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="grain-overlay"></div>
+    
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">🍿</div>
+                <div class="logo-text">
+                    <h1>AI Bites</h1>
+                    <span class="tagline">Subscription Snacks</span>
+                </div>
+            </div>
+            <p class="header-description">Weekly AI intelligence for the B2C news media team. Curated, translated, and served fresh.</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="digest-container">
+            <div class="digest-header">
+                <div class="date-badge" id="current-date">Loading...</div>
+                <div class="language-tabs">
+                    <button class="tab active" data-lang="en">
+                        <span class="flag">🇬🇧</span>
+                        <span class="lang-name">English</span>
+                    </button>
+                    <button class="tab" data-lang="sv">
+                        <span class="flag">🇸🇪</span>
+                        <span class="lang-name">Svenska</span>
+                    </button>
+                    <button class="tab" data-lang="no">
+                        <span class="flag">🇳🇴</span>
+                        <span class="lang-name">Norsk</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="content-area" id="content-area">
+                <div class="loading-state">
+                    <div class="loader"></div>
+                    <p>Fetching the latest bites...</p>
+                </div>
+            </div>
+        </div>
+
+        <aside class="archive-section">
+            <h2>
+                <span class="archive-icon">📚</span>
+                Archive
+            </h2>
+            <ul class="archive-list" id="archive-list">
+                <li class="archive-loading">Loading archive...</li>
+            </ul>
+        </aside>
+    </main>
+
+    <footer>
+        <p>Made with 🤖 for the CXM team</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

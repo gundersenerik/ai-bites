@@ -1,0 +1,11 @@
+{
+  "name": "ai-bites",
+  "version": "1.0.0",
+  "description": "AI Bites - Subscription Snacks newsletter",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}
