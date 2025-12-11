@@ -3,15 +3,23 @@ let currentLang = 'en';
 let currentDigest = null;
 let archiveIndex = [];
 
+// === Configuration ===
+const SUBSCRIBE_WEBHOOK_URL = 'https://hook.eu2.make.com/ehpwhgzeoua60afk7yzj0dx9s5w9ni6d';
+
 // === DOM Elements ===
 const tabs = document.querySelectorAll('.tab');
 const contentArea = document.getElementById('content-area');
 const archiveList = document.getElementById('archive-list');
 const currentDateEl = document.getElementById('current-date');
+const subscribeForm = document.getElementById('subscribe-form');
+const subscribeEmail = document.getElementById('subscribe-email');
+const subscribeBtn = document.getElementById('subscribe-btn');
+const subscribeMessage = document.getElementById('subscribe-message');
 
 // === Initialize ===
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
+    initSubscribeForm();
     loadArchiveIndex();
 });
 
@@ -30,6 +38,56 @@ function setActiveTab(lang) {
     currentLang = lang;
     tabs.forEach(tab => {
         tab.classList.toggle('active', tab.dataset.lang === lang);
+    });
+}
+
+// === Subscribe Form ===
+function initSubscribeForm() {
+    if (!subscribeForm) return;
+    
+    subscribeForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = subscribeEmail.value.trim();
+        if (!email) return;
+        
+        // Show loading state
+        subscribeBtn.disabled = true;
+        subscribeBtn.querySelector('.btn-text').style.display = 'none';
+        subscribeBtn.querySelector('.btn-loading').style.display = 'inline';
+        subscribeMessage.textContent = '';
+        subscribeMessage.className = 'subscribe-message';
+        
+        try {
+            const response = await fetch(SUBSCRIBE_WEBHOOK_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Required for Google Apps Script
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    timestamp: new Date().toISOString(),
+                    source: 'ai-bites-website'
+                })
+            });
+            
+            // Since we're using no-cors, we can't read the response
+            // We assume success if no error was thrown
+            subscribeMessage.textContent = '🎉 Thanks for subscribing!';
+            subscribeMessage.className = 'subscribe-message success';
+            subscribeEmail.value = '';
+            
+        } catch (error) {
+            console.error('Subscribe error:', error);
+            subscribeMessage.textContent = 'Something went wrong. Please try again.';
+            subscribeMessage.className = 'subscribe-message error';
+        } finally {
+            // Reset button state
+            subscribeBtn.disabled = false;
+            subscribeBtn.querySelector('.btn-text').style.display = 'inline';
+            subscribeBtn.querySelector('.btn-loading').style.display = 'none';
+        }
     });
 }
 
