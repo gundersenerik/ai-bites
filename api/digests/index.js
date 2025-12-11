@@ -56,7 +56,11 @@ export default async function handler(req, res) {
         
         if (req.method === 'GET') {
             const digestIds = await kv.zrange('digests:index', 0, -1, { rev: true });
-            return res.status(200).json({ digests: digestIds });
+            
+            // Return as array of objects with id property for the frontend
+            const digests = digestIds.map(id => ({ id, date: id }));
+            
+            return res.status(200).json(digests);
         }
         
         return res.status(405).json({ error: 'Method not allowed' });
