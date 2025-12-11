@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
     <div class="grain-overlay"></div>
@@ -53,14 +53,40 @@
             </div>
         </div>
 
-        <aside class="archive-section">
-            <h2>
-                <span class="archive-icon">📚</span>
-                Archive
-            </h2>
-            <ul class="archive-list" id="archive-list">
-                <li class="archive-loading">Loading archive...</li>
-            </ul>
+        <aside class="sidebar">
+            <!-- Subscribe Box -->
+            <div class="subscribe-section">
+                <h2>
+                    <span class="subscribe-icon">📬</span>
+                    Get AI Bites in your inbox
+                </h2>
+                <p class="subscribe-description">Weekly AI insights delivered every Monday.</p>
+                <form id="subscribe-form" class="subscribe-form">
+                    <input 
+                        type="email" 
+                        id="subscribe-email" 
+                        placeholder="your@email.com" 
+                        required
+                        autocomplete="email"
+                    >
+                    <button type="submit" id="subscribe-btn">
+                        <span class="btn-text">Subscribe</span>
+                        <span class="btn-loading" style="display: none;">...</span>
+                    </button>
+                </form>
+                <p id="subscribe-message" class="subscribe-message"></p>
+            </div>
+
+            <!-- Archive Section -->
+            <div class="archive-section">
+                <h2>
+                    <span class="archive-icon">📚</span>
+                    Archive
+                </h2>
+                <ul class="archive-list" id="archive-list">
+                    <li class="archive-loading">Loading archive...</li>
+                </ul>
+            </div>
         </aside>
     </main>
 
@@ -68,6 +94,6 @@
         <p>Made with 🤖 for the CXM team</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>
