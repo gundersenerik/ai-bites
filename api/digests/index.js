@@ -37,10 +37,19 @@ export default async function handler(req, res) {
                 return res.status(401).json({ error: 'Unauthorized' });
             }
             
-            const { date, content } = req.body;
+            // Accept either {date, content} format OR raw content directly
+            let date, content;
             
-            if (!date || !content) {
-                return res.status(400).json({ error: 'Missing date or content' });
+            if (req.body.en || req.body.sv || req.body.no) {
+                // Raw content format - body IS the content
+                content = req.body;
+                date = new Date().toISOString().split('T')[0]; // Generate date server-side
+            } else if (req.body.date && req.body.content) {
+                // Wrapped format - {date, content}
+                date = req.body.date;
+                content = req.body.content;
+            } else {
+                return res.status(400).json({ error: 'Invalid body format. Send content with en/sv/no keys.' });
             }
             
             const id = date; // Use date as ID (e.g., "2025-01-13")
