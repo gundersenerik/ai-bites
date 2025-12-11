@@ -61,7 +61,6 @@ function initSubscribeForm() {
         try {
             const response = await fetch(SUBSCRIBE_WEBHOOK_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Required for Google Apps Script
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -72,11 +71,13 @@ function initSubscribeForm() {
                 })
             });
             
-            // Since we're using no-cors, we can't read the response
-            // We assume success if no error was thrown
-            subscribeMessage.textContent = '🎉 Thanks for subscribing!';
-            subscribeMessage.className = 'subscribe-message success';
-            subscribeEmail.value = '';
+            if (response.ok) {
+                subscribeMessage.textContent = '🎉 Thanks for subscribing!';
+                subscribeMessage.className = 'subscribe-message success';
+                subscribeEmail.value = '';
+            } else {
+                throw new Error('Failed to subscribe');
+            }
             
         } catch (error) {
             console.error('Subscribe error:', error);
