@@ -1,7 +1,6 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
-    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -10,77 +9,60 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
     
+    // Verify authorization
+    const authHeader = req.headers.authorization;
+    const expectedToken = process.env.API_SECRET_TOKEN;
+    
+    if (req.method === 'POST' && expectedToken) {
+        if (authHeader !== `Bearer ${expectedToken}`) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+    }
+    
     try {
-        if (req.method === 'GET') {
-            // Get list of all digests (sorted by date, newest first)
-            const digestIds = await kv.lrange('digest:index', 0, -1) || [];
+        if (req.method === 'POST') {
+            const id = new Date().toISOString().split('T')[0];
             
-            const digests = await Promise.all(
-                digestIds.map(async (id) => {
-                    const meta = await kv.hgetall(`digest:${id}:meta`);
-                    return {
-                        id,
-                        date: meta?.date || id,
-                        title: meta?.title || `Digest ${id}`
-                    };
-                })
-            );
+            const content = req.body;
             
-            return res.status(200).json(digests);
-            
-        } else if (req.method === 'POST') {
-            // Create a new digest
-            const authHeader = req.headers.authorization;
-            const apiKey = process.env.API_KEY;
-            
-            if (!apiKey || authHeader !== `Bearer ${apiKey}`) {
-                return res.status(401).json({ error: 'Unauthorized' });
+            if (!content || Object.keys(content).length === 0) {
+                return res.status(400).json({ error: 'Missing content' });
             }
             
-            // Accept either {date, content} format OR raw content directly
-            let date, content;
-            
-            if (req.body.en || req.body.sv || req.body.no) {
-                // Raw content format - body IS the content
-                content = req.body;
-                date = new Date().toISOString().split('T')[0]; // Generate date server-side
-            } else if (req.body.date && req.body.content) {
-                // Wrapped format - {date, content}
-                date = req.body.date;
-                content = req.body.content;
-            } else {
-                return res.status(400).json({ error: 'Invalid body format. Send content with en/sv/no keys.' });
-            }
-            
-            const id = date; // Use date as ID (e.g., "2025-01-13")
-            
-            // Store the digest content
+            // Store the content
             await kv.set(`digest:${id}:content`, JSON.stringify(content));
             
             // Store metadata
             await kv.hset(`digest:${id}:meta`, {
-                date: date,
-                title: `AI Bites - ${date}`,
+                date: id,
+                title: `AI Bites - ${id}`,
                 createdAt: new Date().toISOString()
             });
             
-            // Add to index (at the beginning for newest-first ordering)
-            // First remove if exists (to handle updates)
-            await kv.lrem('digest:index', 0, id);
-            // Then add to the beginning
-            await kv.lpush('digest:index', id);
+            // Add to index
+            await kv.zadd('digests:index', {
+                score: Date.now(),
+                member: id
+            });
+            
+            console.log(`Digest created: ${id}`);
             
             return res.status(201).json({ 
                 success: true, 
                 id,
-                message: `Digest ${id} created/updated successfully`
+                languages: Object.keys(content)
             });
+        }
+        
+        if (req.method === 'GET') {
+            const digestIds = await kv.zrange('digests:index', 0, -1, { rev: true });
+            return res.status(200).json({ digests: digestIds });
         }
         
         return res.status(405).json({ error: 'Method not allowed' });
         
     } catch (error) {
         console.error('API Error:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 }
