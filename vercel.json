@@ -21,10 +21,10 @@
   "routes": [
     {
       "src": "/api/digests/([^/]+)",
-      "dest": "/api/digests/[id].js"
+      "dest": "/api/digests/[id].js?id=$1"
     },
     {
-      "src": "/api/digests",
+      "src": "/api/digests/?$",
       "dest": "/api/digests/index.js"
     },
     {
