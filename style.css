@@ -147,9 +147,118 @@ main {
         grid-template-columns: 1fr;
     }
     
-    .archive-section {
+    .sidebar {
         order: 2;
     }
+}
+
+/* === Sidebar === */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* === Subscribe Section === */
+.subscribe-section {
+    background: linear-gradient(135deg, var(--color-bg-elevated) 0%, rgba(255, 107, 53, 0.05) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    padding: 1.5rem;
+}
+
+.subscribe-section h2 {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.subscribe-icon {
+    font-size: 1.2rem;
+}
+
+.subscribe-description {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1rem;
+}
+
+.subscribe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.subscribe-form input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.subscribe-form input[type="email"]:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.subscribe-form input[type="email"]::placeholder {
+    color: var(--color-text-subtle);
+}
+
+.subscribe-form button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.subscribe-form button:hover {
+    background: #ff8255;
+    transform: translateY(-1px);
+}
+
+.subscribe-form button:active {
+    transform: translateY(0);
+}
+
+.subscribe-form button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.subscribe-message {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    min-height: 1.2em;
+}
+
+.subscribe-message.success {
+    color: var(--color-success);
+}
+
+.subscribe-message.error {
+    color: #ef4444;
 }
 
 /* === Digest Container === */
@@ -426,8 +535,6 @@ main {
     border: 1px solid var(--color-border);
     padding: 1.5rem;
     height: fit-content;
-    position: sticky;
-    top: 2rem;
 }
 
 .archive-section h2 {
