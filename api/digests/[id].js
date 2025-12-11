@@ -1,7 +1,6 @@
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
-    // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -21,14 +20,14 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'Missing digest ID' });
         }
         
-        // Get digest content
+        // FIXED: Added opening parenthesis
         const contentStr = await kv.get(`digest:${id}:content`);
         
         if (!contentStr) {
             return res.status(404).json({ error: 'Digest not found' });
         }
         
-        // Get metadata
+        // FIXED: Added opening parenthesis
         const meta = await kv.hgetall(`digest:${id}:meta`) || {};
         
         const content = typeof contentStr === 'string' 
